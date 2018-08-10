@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Survey Form</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type ="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type ="text/javascript">
+         $(document).ready(function (){
+            var socket = io.connect();
+            $('form').submit(function() {
+                socket.emit('form_submitted', {name: $('input').val(), location: $('select[name=location]').val(), language: $('select[name=language]').val(), comment: $('textarea').val()});
+                return false;
+            });
+            socket.on("server_response", function(data) {
+                $('#crap').html("<p>You emitted the following to the server: " + data.response + "</p> <p>Your lucky number emitted by the server is: " + data.number + "</p>");
+            })
+        });
+    </script>
+</head>
+<body>
+
+    <div id="crap"></div>
+
+    <div>
+        <form action="#" method="POST">
+            <p>Your name: <input type="text" name="name"></p>
+            <p>Dojo Location: <select name="location">
+                <option value="Burbank">Burbank</option>
+                <option value="Mountain View">Mountain View</option>
+                <option value="Seattle">Seattle</option>
+            </select></p>
+            <p>Favorite Language: <select name="language">
+                <option value="JavaScript">JavaScript</option>
+                <option value="Python">Python</option>
+                <option value="C#">C#</option>
+            </select></p>
+            <p>Comment (optional) <textarea name="comment" cols="30" rows="10"></textarea></p>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    
+</body>
+</html>
